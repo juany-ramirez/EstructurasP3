@@ -126,6 +126,12 @@ public class Main extends javax.swing.JFrame {
         jButton15 = new javax.swing.JButton();
         jl_hora = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
+        Ubicaciones = new javax.swing.JDialog();
+        jComboBox11 = new javax.swing.JComboBox();
+        jComboBox15 = new javax.swing.JComboBox();
+        jButton19 = new javax.swing.JButton();
+        jLabel54 = new javax.swing.JLabel();
+        jLabel55 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -178,7 +184,6 @@ public class Main extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jRadioButton2.setForeground(new java.awt.Color(0, 0, 51));
-        jRadioButton2.setSelected(true);
         jRadioButton2.setText("NO");
 
         jLabel7.setFont(new java.awt.Font("Sitka Small", 0, 30)); // NOI18N
@@ -197,7 +202,6 @@ public class Main extends javax.swing.JFrame {
         buttonGroup2.add(jRadioButton4);
         jRadioButton4.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jRadioButton4.setForeground(new java.awt.Color(0, 0, 51));
-        jRadioButton4.setSelected(true);
         jRadioButton4.setText("NO");
 
         jLabel9.setFont(new java.awt.Font("Sitka Small", 0, 30)); // NOI18N
@@ -212,7 +216,6 @@ public class Main extends javax.swing.JFrame {
         buttonGroup3.add(jRadioButton6);
         jRadioButton6.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jRadioButton6.setForeground(new java.awt.Color(0, 0, 51));
-        jRadioButton6.setSelected(true);
         jRadioButton6.setText("NO");
 
         jLabel10.setFont(new java.awt.Font("Sitka Small", 0, 30)); // NOI18N
@@ -227,7 +230,6 @@ public class Main extends javax.swing.JFrame {
         buttonGroup4.add(jRadioButton8);
         jRadioButton8.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jRadioButton8.setForeground(new java.awt.Color(0, 0, 51));
-        jRadioButton8.setSelected(true);
         jRadioButton8.setText("NO");
 
         jPanel4.setBackground(new java.awt.Color(51, 51, 51));
@@ -749,6 +751,11 @@ public class Main extends javax.swing.JFrame {
         jButton5.setFont(new java.awt.Font("Rockwell", 1, 36)); // NOI18N
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/ambulance-128.png"))); // NOI18N
         jButton5.setText("EMERGENCIA");
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
         Mapa.getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 630, 430, 170));
 
         jPanel8.setBackground(new java.awt.Color(51, 51, 51));
@@ -974,6 +981,43 @@ public class Main extends javax.swing.JFrame {
         jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Grunge-Backgrounds-HD.jpg"))); // NOI18N
         jLabel25.setToolTipText("");
         Mapa.getContentPane().add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1290, 860));
+
+        Ubicaciones.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                UbicacionesWindowActivated(evt);
+            }
+        });
+        Ubicaciones.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jComboBox11.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jComboBox11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox11ActionPerformed(evt);
+            }
+        });
+        Ubicaciones.getContentPane().add(jComboBox11, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 360, 60));
+
+        jComboBox15.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jComboBox15.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "B", "C", "D" }));
+        Ubicaciones.getContentPane().add(jComboBox15, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 250, 100, 50));
+
+        jButton19.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        jButton19.setForeground(new java.awt.Color(102, 0, 102));
+        jButton19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/011_yes-128.png"))); // NOI18N
+        jButton19.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton19MouseClicked(evt);
+            }
+        });
+        Ubicaciones.getContentPane().add(jButton19, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, -1, -1));
+
+        jLabel54.setFont(new java.awt.Font("Goudy Old Style", 0, 100)); // NOI18N
+        jLabel54.setForeground(new java.awt.Color(0, 0, 51));
+        jLabel54.setText("Ubicacion");
+        Ubicaciones.getContentPane().add(jLabel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, 390, -1));
+
+        jLabel55.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Grunge-Backgrounds-HD.jpg"))); // NOI18N
+        Ubicaciones.getContentPane().add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 570, 480));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -1226,8 +1270,6 @@ public class Main extends javax.swing.JFrame {
         int posicion = modelo.getIndexOf(modelo.getSelectedItem());
         int posicion2 = modelo1.getIndexOf(modelo1.getSelectedItem());
         
-        
-        
         if(!mapeado.get(posicion)){
             graph.addNode(ubicaciones.get(posicion).toString()).addAttribute("label", ubicaciones.get(posicion).toString());
             mapeado.set(posicion, true);
@@ -1236,7 +1278,6 @@ public class Main extends javax.swing.JFrame {
             nodo = graph.getNode(posicionGrafo(modelo.getSelectedItem().toString()));
         }
         
-        
         if(!mapeado.get(posicion2)){
             graph.addNode(ubicaciones.get(posicion2).toString()).addAttribute("label", ubicaciones.get(posicion2).toString());
             mapeado.set(posicion2, true);
@@ -1244,9 +1285,7 @@ public class Main extends javax.swing.JFrame {
         }else{
             nodo2 = graph.getNode(posicionGrafo(modelo1.getSelectedItem().toString()));
         }
-        
         cont++;
-        
         graph.addEdge(cont + "", nodo, nodo2).addAttribute("length", (int)jSpinner6.getValue());
         jSpinner6.setValue(0);
     }//GEN-LAST:event_jButton6MouseClicked
@@ -1285,6 +1324,28 @@ public class Main extends javax.swing.JFrame {
         this.pack();
         this.setVisible(true);
     }//GEN-LAST:event_jButton15MouseClicked
+
+    private void jButton19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton19MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton19MouseClicked
+
+    private void UbicacionesWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_UbicacionesWindowActivated
+        // TODO add your handling code here:
+    }//GEN-LAST:event_UbicacionesWindowActivated
+
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        for (int i = 0; i < ubicaciones.size(); i++) {
+            if(ubicaciones.get(i).getIdentificador()==1){
+                modelo.addElement(ubicaciones.get(i));
+            }
+        }
+        jComboBox11.setModel(modelo);
+    }//GEN-LAST:event_jButton5MouseClicked
+
+    private void jComboBox11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox11ActionPerformed
+        
+    }//GEN-LAST:event_jComboBox11ActionPerformed
 
     String ruta_archivo = "./archivo.dat";
 
@@ -1395,6 +1456,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog Datos;
     private javax.swing.JDialog Mapa;
+    private javax.swing.JDialog Ubicaciones;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
@@ -1406,6 +1468,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1415,6 +1478,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox11;
+    private javax.swing.JComboBox jComboBox15;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
@@ -1450,6 +1515,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;

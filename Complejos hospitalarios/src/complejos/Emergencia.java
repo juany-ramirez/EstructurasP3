@@ -6,7 +6,10 @@
 package complejos;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -18,8 +21,17 @@ public class Emergencia implements Serializable {
     ArrayList<Paramedico> paramedicos;
     boolean terminada;
     
+    boolean condicion;
+    
     //validacion paramedicos, emergencia tratable
     //validacion ambulancia cercana
     
+    
+    
+    public void run(){
+        while(condicion){
+            
+        }
+    }
     
 }
