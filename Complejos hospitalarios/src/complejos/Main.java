@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import org.graphstream.algorithm.Dijkstra;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -20,10 +22,13 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
-        HiloHora h = new HiloHora(this.jl_hora);
+        HiloHora h = new HiloHora(this.jl_hora, true);
         Thread proceso1 = new Thread(h);
         proceso1.start();
         leer();
+        llenarUbicaciones();
+        
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -90,6 +95,7 @@ public class Main extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         buttonGroup1 = new javax.swing.ButtonGroup();
@@ -117,6 +123,7 @@ public class Main extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jPanel11 = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
+        jButton15 = new javax.swing.JButton();
         jl_hora = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -591,6 +598,11 @@ public class Main extends javax.swing.JFrame {
         jButton10.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jButton10.setForeground(new java.awt.Color(102, 0, 102));
         jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/close-outline-128.png"))); // NOI18N
+        jButton10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton10MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -700,14 +712,23 @@ public class Main extends javax.swing.JFrame {
 
         jButton3.setBackground(new java.awt.Color(153, 153, 153));
         jButton3.setFont(new java.awt.Font("Sitka Subheading", 1, 18)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/floppy-64.png"))); // NOI18N
-        jButton3.setText("GUARDAR");
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/home-circle-blue-64.png"))); // NOI18N
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton3MouseClicked(evt);
             }
         });
-        Datos.getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 10, 190, 100));
+        Datos.getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 20, 110, 100));
+
+        jButton14.setBackground(new java.awt.Color(153, 153, 153));
+        jButton14.setFont(new java.awt.Font("Sitka Subheading", 1, 18)); // NOI18N
+        jButton14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/floppy-64.png"))); // NOI18N
+        jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton14MouseClicked(evt);
+            }
+        });
+        Datos.getContentPane().add(jButton14, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 20, 110, 100));
 
         jLabel16.setFont(new java.awt.Font("Goudy Old Style", 0, 100)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(0, 0, 51));
@@ -741,7 +762,9 @@ public class Main extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -751,7 +774,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Mapa.getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 190, 550, 100));
+        Mapa.getContentPane().add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 520, 100));
 
         jButton6.setBackground(new java.awt.Color(0, 0, 0));
         jButton6.setFont(new java.awt.Font("Sitka Subheading", 0, 26)); // NOI18N
@@ -790,21 +813,24 @@ public class Main extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jComboBox8, 0, 166, Short.MAX_VALUE)
-                            .addComponent(jComboBox7, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSpinner6, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addContainerGap(48, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jComboBox8, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(45, 45, 45))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -826,7 +852,7 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        Mapa.getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 280, 420, 320));
+        Mapa.getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 280, 430, 320));
 
         jPanel9.setBackground(new java.awt.Color(51, 51, 51));
 
@@ -855,7 +881,12 @@ public class Main extends javax.swing.JFrame {
         jButton8.setFont(new java.awt.Font("Rockwell", 1, 36)); // NOI18N
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Location-01-128.png"))); // NOI18N
         jButton8.setText("VER MAPA");
-        Mapa.getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 630, 430, 170));
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton8MouseClicked(evt);
+            }
+        });
+        Mapa.getContentPane().add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 630, 430, 170));
 
         jButton9.setBackground(new java.awt.Color(0, 0, 0));
         jButton9.setFont(new java.awt.Font("Sitka Subheading", 0, 26)); // NOI18N
@@ -893,12 +924,12 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
 
-        Mapa.getContentPane().add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 290, -1, 190));
+        Mapa.getContentPane().add(jPanel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 290, -1, 200));
 
         jPanel11.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -926,6 +957,16 @@ public class Main extends javax.swing.JFrame {
 
         Mapa.getContentPane().add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 1290, 120));
 
+        jButton15.setBackground(new java.awt.Color(153, 153, 153));
+        jButton15.setFont(new java.awt.Font("Sitka Subheading", 1, 18)); // NOI18N
+        jButton15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/home-circle-blue-64.png"))); // NOI18N
+        jButton15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton15MouseClicked(evt);
+            }
+        });
+        Mapa.getContentPane().add(jButton15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 780, 80, -1));
+
         jl_hora.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         Mapa.getContentPane().add(jl_hora, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 0, 200, 30));
 
@@ -935,6 +976,7 @@ public class Main extends javax.swing.JFrame {
         Mapa.getContentPane().add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1290, 860));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(153, 153, 153));
 
         jButton1.setBackground(new java.awt.Color(0, 0, 0));
         jButton1.setFont(new java.awt.Font("Sitka Small", 0, 24)); // NOI18N
@@ -1015,7 +1057,7 @@ public class Main extends javax.swing.JFrame {
 
         Hospital hospital = new Hospital(nombre, direccion, paramedicos, ambulancias, ranking);
         hospitales.add(hospital);
-        
+        ubicaciones.add(new Ubicacion(2, nombre));
     }//GEN-LAST:event_jButton7MouseClicked
 
     private void jButton13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton13MouseClicked
@@ -1024,11 +1066,19 @@ public class Main extends javax.swing.JFrame {
         int num2 = (int) jSpinner4.getValue();
         Hospital hospital = (Hospital) this.jComboBox1.getSelectedItem();
         Ambulancia ambulancia = new Ambulancia(nombre, num1, num2, hospital, false);
+        boolean condicion = true;
+
+        DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
         for (int i = 0; i < hospitales.size(); i++) {
-            if (hospitales.get(i).equals(hospital)) {
+            if (hospitales.get(i).equals(hospital) && condicion) {
                 hospitales.get(i).addAmbulancias(ambulancia);
+                condicion = false;
+            }
+            for (int j = 0; j < hospitales.get(i).getAmbulancs().size(); j++) {
+                modelo2.addElement(hospitales.get(i).getAmbulancs().get(j));
             }
         }
+        jComboBox5.setModel(modelo2);
         jTextField4.setText("");
         jSpinner3.setValue(2000);
         jSpinner4.setValue(100);
@@ -1038,7 +1088,7 @@ public class Main extends javax.swing.JFrame {
         String nombre = jTextField5.getText();
         String nombre1 = jTextField6.getText();
         int val = (int) jSpinner5.getValue();
-        char rango = (char) this.jComboBox4.getSelectedItem();
+        char rango = (this.jComboBox4.getSelectedItem().toString()).charAt(0);
         Hospital hospital = (Hospital) this.jComboBox3.getSelectedItem();
         Ranking r;
         Paramedico paramedico = null;
@@ -1051,32 +1101,52 @@ public class Main extends javax.swing.JFrame {
         } else if (rango == 'D') {
             paramedico = new Paramedico(nombre, val, nombre1, hospital, Ranking.D, false);
         }
+        boolean condicion = true;
         for (int i = 0; i < hospitales.size(); i++) {
-            if (hospitales.get(i).equals(hospital)) {
+            if (hospitales.get(i).equals(hospital) && condicion) {
                 hospitales.get(i).addParamedicos(paramedico);
+                condicion =false;
             }
         }
+        
+        DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+        for (int i = 0; i < hospitales.size(); i++) {
+            for (int j = 0; j < hospitales.get(i).getParamedics().size(); j++) {
+                modelo2.addElement(hospitales.get(i).getParamedics().peek());
+            }
+        }
+        jComboBox6.setModel(modelo2);
+
         jTextField5.setText("");
         jTextField6.setText("");
         jSpinner5.setValue(21);
     }//GEN-LAST:event_jButton11MouseClicked
 
     private void DatosWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_DatosWindowActivated
-        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo.addElement(hospitales.get(i));
-        }
-        jComboBox2.setModel(modelo);
+        DefaultComboBoxModel modelo3 = new DefaultComboBoxModel();
         DefaultComboBoxModel modelo1 = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo1.addElement(hospitales.get(i));
-        }
-        jComboBox1.setModel(modelo1);
         DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+        DefaultComboBoxModel modelo4 = new DefaultComboBoxModel();
+        DefaultComboBoxModel modelo5 = new DefaultComboBoxModel();
         for (int i = 0; i < hospitales.size(); i++) {
+            modelo3.addElement(hospitales.get(i));
+            modelo1.addElement(hospitales.get(i));
             modelo2.addElement(hospitales.get(i));
+            hospitales.get(i).setAmbulancs();
+            for (int j = 0; j < hospitales.get(i).getParamedics().size(); j++) {
+                modelo4.addElement(hospitales.get(i).getParamedics().peek());
+            }
+            hospitales.get(i).setParamedics();
+            for (int j = 0; j < hospitales.get(i).getAmbulancs().size(); j++) {
+                modelo5.addElement(hospitales.get(i).getAmbulancs().get(j));
+            }
+
         }
+        jComboBox5.setModel(modelo5);
+        jComboBox2.setModel(modelo3);
+        jComboBox1.setModel(modelo1);
         jComboBox3.setModel(modelo2);
+        jComboBox6.setModel(modelo4);
     }//GEN-LAST:event_DatosWindowActivated
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
@@ -1094,19 +1164,37 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        escribir();
+        this.Datos.setVisible(false);
+        this.pack();
+        this.setVisible(true);
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) jComboBox2.getModel();
-        Hospital hosp = (Hospital) modelo.getSelectedItem();
-        hospitales.remove(hosp);
+        int pos = 0;
+        for (int i = 0; i < hospitales.size(); i++) {
+            if (hospitales.get(i).equals(modelo.getSelectedItem())) {
+                pos = i;
+            }
+        }
+        hospitales.remove(pos);
+        DefaultComboBoxModel modelo3 = new DefaultComboBoxModel();
+        DefaultComboBoxModel modelo1 = new DefaultComboBoxModel();
+        DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+        for (int i = 0; i < hospitales.size(); i++) {
+            modelo3.addElement(hospitales.get(i));
+            modelo1.addElement(hospitales.get(i));
+            modelo2.addElement(hospitales.get(i));
+        }
+        jComboBox2.setModel(modelo3);
+        jComboBox1.setModel(modelo1);
+        jComboBox3.setModel(modelo2);
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) jComboBox5.getModel();
         Ambulancia amb = (Ambulancia) modelo.getSelectedItem();
-        
+
         for (int i = 0; i < hospitales.size(); i++) {
             for (int j = 0; j < hospitales.get(i).getParamedics().size(); j++) {
                 if (hospitales.get(i).getAmbulancs().get(i).equals(amb)) {
@@ -1118,83 +1206,115 @@ public class Main extends javax.swing.JFrame {
 
     private void MapaWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_MapaWindowActivated
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo.addElement(hospitales.get(i));
-        }
+        DefaultComboBoxModel modelo1 = new DefaultComboBoxModel();
+
         for (int i = 0; i < ubicaciones.size(); i++) {
             modelo.addElement(ubicaciones.get(i));
+            modelo1.addElement(ubicaciones.get(i));
         }
         jComboBox7.setModel(modelo);
-        DefaultComboBoxModel modelo1 = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo1.addElement(hospitales.get(i));
-        }
-        for (int i = 0; i < ubicaciones.size(); i++) {
-            modelo.addElement(ubicaciones.get(i));
-        }
         jComboBox8.setModel(modelo1);
     }//GEN-LAST:event_MapaWindowActivated
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
         DefaultComboBoxModel modelo = (DefaultComboBoxModel) jComboBox7.getModel();
         DefaultComboBoxModel modelo1 = (DefaultComboBoxModel) jComboBox8.getModel();
-        Hospital hosp=null;
         
-        if(modelo.getSelectedItem().getClass().equals(hosp.getClass())){
-            int pos=0;
-            for (int i = 0; i < hospitales.size(); i++) {
-                if(hospitales.get(i).equals(modelo.getSelectedItem()) ){
-                    pos = i;
-                }
-            }
-            graph.addNode(hospitales.get(pos).getNombre()).addAttribute("Hospital", hospitales.get(pos));
-            System.out.println("Entre a la condicion de hospitales");
+        verificarUbicaciones();
+        Node nodo;
+        Node nodo2;
+        int posicion = modelo.getIndexOf(modelo.getSelectedItem());
+        int posicion2 = modelo1.getIndexOf(modelo1.getSelectedItem());
+        
+        
+        
+        if(!mapeado.get(posicion)){
+            graph.addNode(ubicaciones.get(posicion).toString()).addAttribute("label", ubicaciones.get(posicion).toString());
+            nodo = graph.getNode(graph.getNodeCount()-1);
         }else{
-            graph.addNode(modelo.getSelectedItem().toString()).addAttribute("Hospital", modelo.getSelectedItem().toString());
-            System.out.println("Entre a la condicion de Ubicaciones");
+            nodo = graph.getNode(posicionGrafo(modelo.getSelectedItem().toString()));
         }
         
-        if(modelo1.getSelectedItem().getClass().equals(hosp.getClass())){
-            int pos=0;
-            for (int i = 0; i < hospitales.size(); i++) {
-                if(hospitales.get(i).equals(modelo1.getSelectedItem()) ){
-                    pos = i;
-                }
-            }
-            graph.addNode(hospitales.get(pos).getNombre()).addAttribute("Hospital", hospitales.get(pos));
+        if(!mapeado.get(posicion2)){
+            graph.addNode(ubicaciones.get(posicion2).toString()).addAttribute("label", ubicaciones.get(posicion2).toString());
+            nodo2 = graph.getNode(graph.getNodeCount()-1);
         }else{
-            graph.addNode(modelo1.getSelectedItem().toString()).addAttribute("Ubicacion", modelo1.getSelectedItem().toString());
-            
+            nodo2 = graph.getNode(posicionGrafo(modelo1.getSelectedItem().toString()));
         }
-        cont++;      
-        int size = graph.getNodeCount();
-        Node nodo = graph.getNode(size-1);
-        Node nodo2 = graph.getNode(size-2);
-        graph.addEdge(cont+"" , nodo, nodo2).addAttribute("Distancia", (int)jSpinner6.getValue());
         
+        graph.addEdge(cont + "", nodo, nodo2).addAttribute("length", (int)jSpinner6.getValue());
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
-        ubicaciones.add(jTextField3.getText());
-        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo.addElement(hospitales.get(i));
-        }
+        ubicaciones.add(new Ubicacion(1, jTextField3.getText()));
+        DefaultComboBoxModel modelo3 = new DefaultComboBoxModel();
+        DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+
         for (int i = 0; i < ubicaciones.size(); i++) {
-            modelo.addElement(ubicaciones.get(i));
+            modelo2.addElement(ubicaciones.get(i));
+            modelo3.addElement(ubicaciones.get(i));
         }
-        jComboBox7.setModel(modelo);
-        DefaultComboBoxModel modelo1 = new DefaultComboBoxModel();
-        for (int i = 0; i < hospitales.size(); i++) {
-            modelo1.addElement(hospitales.get(i));
-        }
-        for (int i = 0; i < ubicaciones.size(); i++) {
-            modelo.addElement(ubicaciones.get(i));
-        }
-        jComboBox8.setModel(modelo1);
+        jComboBox7.setModel(modelo2);
+        jComboBox8.setModel(modelo3);
+
+        jTextField3.setText("");
     }//GEN-LAST:event_jButton9MouseClicked
 
+    private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MouseClicked
+        escribir();
+    }//GEN-LAST:event_jButton14MouseClicked
+
+    private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
+        this.Mapa.setModal(false);
+
+        graph.display();
+    }//GEN-LAST:event_jButton8MouseClicked
+
+    private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
+
+    }//GEN-LAST:event_jButton10MouseClicked
+
+    private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MouseClicked
+        this.Mapa.setVisible(false);
+        this.pack();
+        this.setVisible(true);
+    }//GEN-LAST:event_jButton15MouseClicked
+
     String ruta_archivo = "./archivo.dat";
+
+    public int posicionGrafo(String nombre){
+        int num = 0;
+        for (int i = 0; i < graph.getNodeCount(); i++) {
+            if(graph.getNode(i).equals(nombre)){
+                num = i;
+            }
+        }
+        return num;
+    }
+    
+    public void verificarUbicaciones(){
+        int size = mapeado.size();
+        for (int i = 0; i < ubicaciones.size(); i++) {
+            if(size<=i){
+                mapeado.add(false);
+                
+            }
+        }
+        for (int i = 0; i < ubicaciones.size(); i++) {
+            for (int j = 0; j < graph.getNodeCount(); j++) {
+                if(ubicaciones.get(i).equals(graph.getNode(i))){
+                    mapeado.set(i, true);
+                }
+            }
+        }
+        
+    }
+    
+    public void llenarUbicaciones() {
+        for (int i = 0; i < hospitales.size(); i++) {
+            ubicaciones.add(new Ubicacion(2, hospitales.get(i).getNombre()));
+        }
+    }
 
     public void escribir() {
         try {
@@ -1208,14 +1328,12 @@ public class Main extends javax.swing.JFrame {
                 bw = new BufferedWriter(new FileWriter(archivo));
                 bw.write("Acabo de crear el fichero de texto.");
             }
-
             //Se crea un Stream para guardar archivo
             ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(this.ruta_archivo));
             //Se escribe el objeto en archivo
             file.writeObject(hospitales);
             //se cierra archivo
             file.close();
-            System.out.println("si escribi");
         } catch (IOException ex) {
             System.out.println(ex);
         }
@@ -1228,7 +1346,6 @@ public class Main extends javax.swing.JFrame {
             ObjectInputStream file = new ObjectInputStream(new FileInputStream(this.ruta_archivo));
             //Se lee el objeto de archivo y este debe convertirse al tipo de clase que corresponde
             hospitales = (ArrayList<Hospital>) file.readObject();
-            System.out.println("si lei");
             //se cierra archivo
             file.close();
             //Se utilizan metodos de la clase asi como variables guardados en el objeto
@@ -1287,6 +1404,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1370,9 +1489,9 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jl_hora;
     // End of variables declaration//GEN-END:variables
 
+    ArrayList<Ubicacion> ubicaciones = new ArrayList();
+    ArrayList<Boolean> mapeado = new ArrayList();
     ArrayList<Hospital> hospitales = new ArrayList();
     Graph graph = new SingleGraph("Mapa Hospitales");
     int cont = 0;
-    ArrayList<String > ubicaciones = new ArrayList();
-
 }

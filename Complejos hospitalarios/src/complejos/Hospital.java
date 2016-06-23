@@ -13,8 +13,8 @@ import java.util.PriorityQueue;
  *
  * @author Admin
  */
-public class Hospital implements Serializable {
-    String nombre;
+public class Hospital extends Ubicacion implements Serializable {
+    
     String direccion;
     int paramedicos;
     int ambulancias;
@@ -29,21 +29,31 @@ public class Hospital implements Serializable {
     private static final long serialVersionUID = 7526472295622776147L;
 
     public Hospital(String nombre, String direccion, int paramedicos, int ambulancias, ArrayList<Character> rangos) {
-        this.nombre = nombre;
+        super(nombre);
         this.direccion = direccion;
         this.paramedicos = paramedicos;
         this.ambulancias = ambulancias;
         this.rangos = rangos;
+        this.ambulancs = ambulancs;
     }
-
+    
+    public Hospital( int identificador, String nombre, String direccion, int paramedicos, int ambulancias, ArrayList<Character> rangos, ArrayList<Ambulancia> ambulancs) {
+        super(identificador, nombre);
+        this.direccion = direccion;
+        this.paramedicos = paramedicos;
+        this.ambulancias = ambulancias;
+        this.rangos = rangos;
+        this.ambulancs = ambulancs;
+    }
+/*
     public String getNombre() {
-        return nombre;
+        return super.nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        super.nombre = nombre;
     }
-
+*/
     public String getDireccion() {
         return direccion;
     }
@@ -86,6 +96,9 @@ public class Hospital implements Serializable {
     }
     
     public void addAmbulancias(Ambulancia amb){
+        if(ambulancs== null){
+            ambulancs= new ArrayList();
+        }
         ambulancs.add(amb);
     }
     
@@ -95,6 +108,18 @@ public class Hospital implements Serializable {
     
     public ArrayList<Ambulancia> getAmbulancs() {
         return ambulancs;
+    }
+    
+    public void setAmbulancs() {
+        if(ambulancs== null){
+            ambulancs= new ArrayList();
+        }
+    }
+    
+    public void setParamedics() {
+        if(paramedics== null){
+            paramedics= new  PriorityQueue();
+        }
     }
 
     public PriorityQueue<Paramedico> getParamedics() {

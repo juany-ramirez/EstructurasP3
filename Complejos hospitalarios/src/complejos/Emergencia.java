@@ -19,7 +19,7 @@ public class Emergencia implements Serializable {
     boolean terminada;
     
     //validacion paramedicos, emergencia tratable
-    
     //validacion ambulancia cercana
+    
     
 }
