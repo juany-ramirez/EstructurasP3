@@ -1230,19 +1230,25 @@ public class Main extends javax.swing.JFrame {
         
         if(!mapeado.get(posicion)){
             graph.addNode(ubicaciones.get(posicion).toString()).addAttribute("label", ubicaciones.get(posicion).toString());
+            mapeado.set(posicion, true);
             nodo = graph.getNode(graph.getNodeCount()-1);
         }else{
             nodo = graph.getNode(posicionGrafo(modelo.getSelectedItem().toString()));
         }
         
+        
         if(!mapeado.get(posicion2)){
             graph.addNode(ubicaciones.get(posicion2).toString()).addAttribute("label", ubicaciones.get(posicion2).toString());
+            mapeado.set(posicion2, true);
             nodo2 = graph.getNode(graph.getNodeCount()-1);
         }else{
             nodo2 = graph.getNode(posicionGrafo(modelo1.getSelectedItem().toString()));
         }
         
+        cont++;
+        
         graph.addEdge(cont + "", nodo, nodo2).addAttribute("length", (int)jSpinner6.getValue());
+        jSpinner6.setValue(0);
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
@@ -1300,13 +1306,7 @@ public class Main extends javax.swing.JFrame {
                 
             }
         }
-        for (int i = 0; i < ubicaciones.size(); i++) {
-            for (int j = 0; j < graph.getNodeCount(); j++) {
-                if(ubicaciones.get(i).equals(graph.getNode(i))){
-                    mapeado.set(i, true);
-                }
-            }
-        }
+        
         
     }
     
